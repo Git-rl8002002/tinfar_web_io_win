@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>{{ title }}</title>
+
+    <!-- logo icon -->
+    <link rel="Shortcut Icon" type="image/x-icon" href="{{ url_for('static',filename='img/icon/database.png') }}" />
+
+    <!-- Responsive meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 4.5.2 --> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Bootstrap 4.6.1
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script type="text/javascript" src="{{ url_for('static' , filename='js/jquery-3.4.1.min.js') }}"></script>
+    -->
+    
+    
+    <!-- socketIO CDN -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.5.1/socket.io.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}" >
+    
+    <!-- JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static' , filename='js/index.js') }}"></script>
+    
+    <!-- websocket -->
+    <script type="text/javascript">
+        $(document).ready(function(){
+        
+        var socket = io.connect('http://61.220.205.142:8080/ws_modbus_rtu_sd');
+        
+        socket.on('server_response', function(res) {
+            var t = res.data;
+            $("#status").heml(t);
+        });
+               
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100){
+                $('#goto_top').fadeIn("fast");
+            } 
+            else {
+                $('#goto_top').stop().fadeOut("fast");
+            }});   
+            
+        });
+    </script>	
+
+
+</head>
+<body>
+    <!-- menu -->
+    <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm bg-primary fixed-top">
+        <!-- Brand -->
+        <a class="navbar-brand mr-2" href="/"><button class="btn btn-primary">WebCloud</button></a>
+        {% if lv == "1" %}
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler btn btn-primary " type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <!-- online user -->
+            <li class="nav-item mr-2"><button class="btn btn-primary"><i class="bi bi-person-circle"></i> {{ user }}</button></li>
+
+            <!-- logout -->
+            <li class="nav-item mr-2"><a href="/logout"><button class="btn btn-primary"><i class="bi bi-door-open"></i> logout</button></a></li>
+            
+            <!-- TINFAR -->    
+            <li class="nav-item dropdown">
+                <a class="nav-linkbtn dropdown-toggle" href="#" id="db-system" data-toggle="dropdown"><button class="btn btn-primary"><i class="bi bi-clipboard-data"></i> TINFAR</button></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/">Modbus RTU - SD & CW9</a>
+                    <a class="dropdown-item" href="/modbus_rtu_sd">Modbus RTU - SD <span class="text-primary">({{ sd_total_ok }})</span></a>
+                    <a class="dropdown-item" href="/modbus_rtu_sd_total_by_val">Modbus RTU - SD total by val <span class="text-primary">({{ sd_by_val_total_ok }})</span></a>
+                    <a class="dropdown-item" href="/modbus_rtu_cw9">Modbus RTU - CW9 <span class="text-primary">({{ cw9_total_ok }})</span></a>
+                </div>
+            </li>
+
+            <!-- DB system -->    
+            <li class="nav-item dropdown">
+                <a class="nav-linkbtn dropdown-toggle" href="#" id="db-system" data-toggle="dropdown"><button class="btn btn-primary"><i class="bi bi-server"></i> DB system</button></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/menu_money_record"><i class="bi bi-basket"></i> 記帳本</a>
+                    <a class="dropdown-item" href="/menu_car_record"><i class="bi bi-pencil-square"></i> 用車記錄</a>
+                    <a class="dropdown-item" href="/menu_work_record"><i class="bi bi-pen"></i> 工作記錄</a>
+                    <a class="dropdown-item" href="/menu_calendar_record"><i class="bi bi-calendar3"></i> 工作日誌</a>
+                </div>
+            </li>
+        </ul>
+        </div> 
+
+        {% elif lv == "3" %}
+        <button class="navbar-toggler btn btn-primary " type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <!-- online user -->
+            <li class="nav-item mr-2"><button class="btn btn-primary"><i class="bi bi-person-circle"></i> {{ user }}</button></li>
+
+            <!-- logout -->
+            <li class="nav-item mr-2"><a href="/logout"><button class="btn btn-primary"><i class="bi bi-door-open"></i> logout</button></a></li>
+
+            <!-- DB system -->    
+            <li class="nav-item dropdown">
+                <a class="nav-linkbtn dropdown-toggle" href="#" id="db-system" data-toggle="dropdown"><button class="btn btn-primary"><i class="bi bi-server"></i> DB system</button></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/menu_money_record"><i class="bi bi-basket"></i> 記帳本</a>
+                    <a class="dropdown-item" href="/menu_car_record"><i class="bi bi-pencil-square"></i> 用車記錄</a>
+                    <a class="dropdown-item" href="/menu_work_record"><i class="bi bi-pen"></i> 工作記錄</a>
+                    <a class="dropdown-item" href="/menu_calendar_record"><i class="bi bi-calendar3"></i> 工作日誌</a>
+                </div>
+            </li>
+        </ul>
+        </div>
+
+        {% elif lv == "4" %}
+        <button class="navbar-toggler btn btn-primary " type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <!-- online user -->
+            <li class="nav-item mr-2"><button class="btn btn-primary"><i class="bi bi-person-circle"></i> {{ user }}</button></li>
+
+            <!-- logout -->
+            <li class="nav-item mr-2"><a href="/logout"><button class="btn btn-primary"><i class="bi bi-door-open"></i> logout</button></a></li>
+            <!-- TINFAR -->    
+            <li class="nav-item dropdown">
+                <a class="nav-linkbtn dropdown-toggle" href="#" id="db-system" data-toggle="dropdown"><button class="btn btn-primary"><i class="bi bi-clipboard-data"></i> TINFAR</button></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/">Modbus RTU - SD & CW9</a>
+                    <a class="dropdown-item" href="/modbus_rtu_sd">Modbus RTU - SD <span class="text-primary">({{ sd_total_ok }})</span></a>
+                    <a class="dropdown-item" href="/modbus_rtu_sd_total_by_val">Modbus RTU - SD total by val <span class="text-primary">({{ sd_by_val_total_ok }})</span></a>
+                    <a class="dropdown-item" href="/modbus_rtu_cw9">Modbus RTU - CW9 <span class="text-primary">({{ cw9_total_ok }})</span></a>
+                </div>
+            </li>
+        </ul>
+        </div>
+        {% endif %}
+    </nav>
+    </div>
+
+    <!-- main content -->
+    <!-- main title -->
+    <div class="container-fluid text-success" style="margin-top:7%;"><h3><i class="bi bi-card-text"></i> Modbud RTU - SD sensor</h3></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- title -->
+            <div id="main_content" class="col-md-6 bg-light">
+                <div id="status" class="text-success">
+                    <div class="btn-group">
+                        <button class="btn btn-primary">realtime monitor</button>
+                    </div>
+                </div>
+                <!-- content -->
+                <div id="main_content">
+                        {% for val in msg %}
+                        <div class="mouse_hover" style="border:#cccccc 1px solid; margin:1%; padding:1%;">
+                            <span class="text-success">{{ val[0] }}</span> , {{ val[1] }} , {{ val[2] }} , <span class="text-primary">{{ val[3] }}</span> ppm
+                        </div>
+                        {% endfor %}
+                </div>
+                <!-- goto top -->
+                <div class="text-right">
+                    <button id="goto_top" class="btn btn-success text-right" onclick="goto_top()">
+                        <i class="bi bi-chevron-double-up"></i> Back Top
+                    </button>
+                </div>
+            </div>
+            <!-- content 2 -->
+            <div class="col-md-6"></div>
+        </div>
+        
+    </div>
+</body>
+</html>
